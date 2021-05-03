@@ -11,6 +11,7 @@ save = False
 play = True
 name = getpass.getuser()
 print("Welcome," , name)
+restart = False
 try:
     f = open("savegame.txt", "r")
     list1.clear
@@ -61,7 +62,39 @@ if save != True:
 
 
 while play == True:
-    print ("    ", end = "")
+    if restart == True:
+        masterlist.clear()
+        for i in range (9):
+            list1 = [0,0,0,0,0,0,9,0,0]
+            shuffle(list1)
+            masterlist.append(list1[:])
+        for i in range(9):
+            for j in range(9):
+                if masterlist[i][j] == 9:
+                    if i !=0 and j != 0 and masterlist[i-1][j-1] != 9:
+                        masterlist[i-1][j-1] = masterlist[i-1][j-1]+1
+                    if  j != 0 and masterlist[i][j-1] != 9:
+                        masterlist[i][j-1] = masterlist[i][j-1]+1
+                    if i != 0 and masterlist[i-1][j] != 9:
+                        masterlist[i-1][j] = masterlist[i-1][j]+1
+                    if i != 0 and j != 8 and masterlist[i-1][j+1] != 9:
+                        masterlist[i-1][j+1] = masterlist[i-1][j+1]+1
+                    if j != 8 and masterlist[i][j+1] != 9:
+                        masterlist[i][j+1] = masterlist[i][j+1]+1
+                    if i == 8:
+                        break
+                    if masterlist[i+1][j] != 9:
+                        masterlist[i+1][j] = masterlist[i+1][j]+1
+                    if j != 0 and masterlist[i+1][j-1] != 9:
+                        masterlist[i+1][j-1] = masterlist[i+1][j-1]+1
+                    if j == 8:
+                        break
+                    if i !=8 and j != 8 and masterlist[i+1][j+1] != 9:
+                        masterlist[i+1][j+1] = masterlist[i+1][j+1]+1
+                   
+        restart = False
+    elif restart == False:
+        print ("    ", end = "")
     for i in range (9):
         print (i +1, end = "   ")
     print ()
@@ -103,6 +136,7 @@ while play == True:
                     f.write(str(masterlist[8][8]))
                 f.write("\n")
            
+
             exit()
         elif PSQ != "S" or "s" or "c" or "C" or "q" or "Q":
             print("Please type C, S, or Q")
@@ -147,18 +181,25 @@ while play == True:
 
     if masterlist[Coord1-1][Coord2-1] == 9:
         print ("YOU LOSE!")
+        f = open("savegame.txt", "w")
+        f.write("")
+        f.close()
+        go = False
         while go != True:
             playagain = input("Play Again? Y/N: ")
             go = False
-            if input != 'y' or 'n' or 'Y' or 'N':
+            go = True
+            if playagain == "y" or playagain =="Y":
+                f = open("savegame.txt", "w")
+                f.close()
+                restart = True
+                play = True
+            elif playagain == "n" or playagain == "N":
+                play = False
+                exit
+            elif playagain != "y" or "n" or "Y" or "N":
                 print("Please enter y or n")
                 go = False
-            go = True
-            if input == 'y' or 'Y':
-                play = True
-            if input == 'n' or 'N':
-                play = False
-        break
     if masterlist[Coord1-1][Coord2-1] == 0:
         masterlist[Coord1-1][Coord2-1] = 10
         for i in range (Coord1-1, 9, 1):
